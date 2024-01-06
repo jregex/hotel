@@ -1,87 +1,119 @@
-<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-xl fixed-start my-3 ms-4 border-0 bg-white"
-	id="sidenav-main" data-color="primary">
-	<div class="sidenav-header text-center">
-		<a class="navbar-brand m-0" href="{{ route('dashboard') }}">
-			<img src="{{ asset('assets/admin/assets/img') }}/hospital.png" class="img-fluid" height="48"
-				alt="logo Brand">
-		</a>
-	</div>
-	<hr class="horizontal dark mt-0">
-	<div class="navbar-collapse collapse h-auto w-auto" id="sidenav-collapse-main">
-		<ul class="navbar-nav">
-			<li class="nav-item">
-				<a class="nav-link {{ Request::routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
-					<div
-						class="icon icon-shape icon-sm border-radius-md d-flex align-items-center justify-content-center me-2 text-center">
-						<i class="ni ni-tv-2 text-primary text-sm opacity-10"></i>
-					</div>
-					<span class="nav-link-text ms-1">Dashboard</span>
-				</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link {{ Request::routeIs('pasien.*') ? 'active' : '' }}"
-					href="{{ route('pasien.index') }}">
-					<div
-						class="icon icon-shape icon-sm border-radius-md d-flex align-items-center justify-content-center me-2 text-center">
-						<i class="ni ni-badge text-success text-sm opacity-10"></i>
-					</div>
-					<span class="nav-link-text ms-1">Pasien</span>
-				</a>
-			</li>
+<!-- Main Sidebar Container -->
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="index3.html" class="brand-link">
+        <img src="{{ asset('assets/assets') }}/dist/img/AdminLTELogo.png" alt="AdminLTE Logo"
+            class="brand-image img-circle elevation-3" style="opacity: .8">
+        <span class="brand-text font-weight-light">Hotel</span>
+    </a>
 
-			<li class="nav-item">
-				<a class="nav-link {{ Request::routeIs('dokter.*') ? 'active' : '' }}"
-					href="{{ route('dokter.index') }}">
-					<div
-						class="icon icon-shape icon-sm border-radius-md d-flex align-items-center justify-content-center me-2 text-center">
-						<i class="ni ni-circle-08 text-success text-sm opacity-10"></i>
-					</div>
-					<span class="nav-link-text ms-1">Dokter</span>
-				</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link {{ Request::routeIs('ruangan.*') ? 'active' : '' }}"
-					href="{{ route('ruangan.index') }}">
-					<div
-						class="icon icon-shape icon-sm border-radius-md d-flex align-items-center justify-content-center me-2 text-center">
-						<i class="ni ni-building text-success text-sm opacity-10"></i>
-					</div>
-					<span class="nav-link-text ms-1">Ruangan</span>
-				</a>
-			</li>
-            <li class="nav-item">
-				<a class="nav-link {{ Request::routeIs('jadwal.*') ? 'active' : '' }}"
-					href="{{ route('jadwal.index') }}">
-					<div
-						class="icon icon-shape icon-sm border-radius-md d-flex align-items-center justify-content-center me-2 text-center">
-						<i class="ni ni-calendar-grid-58 text-success text-sm opacity-10"></i>
-					</div>
-					<span class="nav-link-text ms-1">Jadwal</span>
-				</a>
-			</li>
-			<li class="nav-item mt-3">
-				<h6 class="text-uppercase font-weight-bolder opacity-6 ms-2 ps-4 text-xs">Account pages</h6>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link {{ Request::routeIs('profile_') ? 'active' : '' }}" href="{{ route('profile_') }}">
-					<div
-						class="icon icon-shape icon-sm border-radius-md d-flex align-items-center justify-content-center me-2 text-center">
-						<i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
-					</div>
-					<span class="nav-link-text ms-1">Profile</span>
-				</a>
-			</li>
-			@if (session()->get('admin-account.role_id') == 1)
-			<li class="nav-item">
-				<a class="nav-link {{ Request::routeIs('users.*') ? 'active' : '' }}" href="{{ route('users.index') }}">
-					<div
-						class="icon icon-shape icon-sm border-radius-md d-flex align-items-center justify-content-center me-2 text-center">
-						<i class="fas fa-users text-dark text-sm opacity-10"></i>
-					</div>
-					<span class="nav-link-text ms-1">Users</span>
-				</a>
-			</li>
-			@endif
-		</ul>
-	</div>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar user panel (optional) -->
+        <div class="user-panel d-flex mb-3 mt-3 pb-3">
+            <div class="image">
+                <img src="{{ asset('storage/userprofile/' . session()->get('admin-account.image')) }}"
+                    class="img-circle elevation-2" alt="User Image">
+            </div>
+            <div class="info">
+                <a href="{{ route('profile_') }}" class="d-block">{{ session()->get('admin-account.name') }}</a>
+            </div>
+        </div>
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <!-- Add icons to the links using the .nav-icon class
+   with font-awesome or any other icon font library -->
+                <li class="nav-item">
+                    <a href="{{ route('dashboard') }}"
+                        class="nav-link {{ Request::routeIs('dashboard') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Dashboard
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('booking.index') }}"
+                        class="nav-link {{ Request::routeIs('booking.*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-money-check"></i>
+                        <p>
+                            Booking
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('bookings.list') }}"
+                        class="nav-link {{ Request::routeIs('bookings.list') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-money-check"></i>
+                        <p>
+                            Booking list
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('tamu.index') }}"
+                        class="nav-link {{ Request::routeIs('tamu.*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-address-book"></i>
+                        <p>
+                            Buku Tamu
+                        </p>
+                    </a>
+                </li>
+
+                @if (session()->get('admin-account.role_id')==1)
+
+                <li
+                    class="nav-item {{ Request::routeIs('rooms.*') || Request::routeIs('categories.*') ? 'menu-open' : '' }}">
+                    <a href="#"
+                        class="nav-link {{ Request::routeIs('rooms.*') || Request::routeIs('categories.*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-bed"></i>
+                        <p>
+                            Kamar
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('categories.index') }}"
+                                class="nav-link {{ Request::routeIs('categories.*') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Tipe kamar</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('rooms.index') }}"
+                                class="nav-link {{ Request::routeIs('rooms.*') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Kamar</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('riwayat.list') }}"
+                        class="nav-link {{ Request::routeIs('riwayat.*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-history"></i>
+                        <p>
+                            Riwayat booking
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('users.index') }}"
+                        class="nav-link {{ Request::routeIs('users.*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-user"></i>
+                        <p>
+                            Users
+                        </p>
+                    </a>
+                </li>
+                @endif
+
+            </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
 </aside>

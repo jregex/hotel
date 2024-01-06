@@ -51,7 +51,8 @@ class UserController extends Controller
     {
         $data = [
             'title' => 'My Profile',
-            'var' => 'profile', 'users' => User::where('id', $request->session()->get('admin-account.id'))->with('role')->first(),
+            'var' => 'profile',
+            'users' => User::where('id', 1)->with('role')->first(),
             'roles' => Role::get()
         ];
         return view('admin.users.profile', $data);
@@ -61,6 +62,15 @@ class UserController extends Controller
     {
         $request->session()->forget('admin-account');
         return redirect()->route('login');
+    }
+
+    public function create(Request $request)
+    {
+        $data = [
+            'title' => 'Create Users',
+            'roles' => Role::all()
+        ];
+        return view('admin.users.create', $data);
     }
 
     /**
@@ -76,6 +86,7 @@ class UserController extends Controller
             'email' => 'required|email',
             'name' => 'required',
             'password' => 'required',
+            'jabatan' => 'required',
             'role_id' => 'required',
             'image' => 'image|mimes:jpg,png,bmp,jpeg,webp'
         ]);
@@ -86,7 +97,7 @@ class UserController extends Controller
             if (!Storage::exists('/public/userprofile')) {
                 Storage::makeDirectory('public/userprofile', 0775, true);
             }
-            $namafile =  md5(date('d-m-s', strtotime(now()))) . '.' . $file->getClientOriginalExtension();
+            $namafile = md5(date('d-m-s', strtotime(now()))) . '.' . $file->getClientOriginalExtension();
             $img = Image::make($file->path());
             $img->resize(200, null, function ($constraint) {
                 $constraint->aspectRatio();
@@ -98,6 +109,7 @@ class UserController extends Controller
             'role_id' => $request->role_id,
             'email' => $request->email,
             'username' => $request->username,
+            'jabatan' => $request->jabatan,
             'password' => Hash::make($request->password),
             'image' => $namafile
         ]);
@@ -142,14 +154,16 @@ class UserController extends Controller
             if (!Storage::exists('/public/userprofile')) {
                 Storage::makeDirectory('public/userprofile', 0775, true);
             }
-            $namafile =  md5(date('d-m-s', strtotime(now()))) . '.' . $file->getClientOriginalExtension();
+            $namafile = md5(date('d-m-s', strtotime(now()))) . '.' . $file->getClientOriginalExtension();
             $img = Image::make($file->path());
             $img->resize(200, null, function ($constraint) {
                 $constraint->aspectRatio();
             });
             $result = $img->save(Storage::path('public/userprofile/' . $namafile));
             if ($result) {
-                unlink(public_path('storage/userprofile' . $user->image));
+                if (Storage::fileExists('/public/userprofile/' . $user->image)) {
+                    unlink(public_path('storage/userprofile/' . $user->image));
+                }
             }
         } else {
             $namafile = $user->image;
@@ -197,16 +211,37 @@ class UserController extends Controller
 
     public function updateProfile(User $user, Request $request)
     {
+        $file = $request->file('image');
+        if ($file) {
+            if (!Storage::exists('/public/userprofile')) {
+                Storage::makeDirectory('public/userprofile', 0775, true);
+            }
+            $namafile = md5(date('d-m-s', strtotime(now()))) . '.' . $file->getClientOriginalExtension();
+            $img = Image::make($file->path());
+            $img->resize(200, null, function ($constraint) {
+                $constraint->aspectRatio();
+            });
+            $result = $img->save(Storage::path('public/userprofile/' . $namafile));
+            if ($result) {
+                if (Storage::fileExists('/public/userprofile/' . $user->image)) {
+                    unlink(public_path('storage/userprofile/' . $user->image));
+                }
+            }
+        } else {
+            $namafile = $user->image;
+        }
         $update = User::where('id', $user->id)->update([
             'name' => $request->input('name'),
             'username' => $request->input('username'),
-            'email' => $request->input('email')
+            'email' => $request->input('email'),
+            'image' => $namafile
         ]);
         if ($update) {
             $sesi = $request->session()->get('admin-account');
             $sesi['name'] = $request->name;
             $sesi['username'] = $request->username;
             $sesi['email'] = $request->email;
+            $sesi['image'] = $namafile;
             return redirect()->route('profile_')->with('success', 'profile was successfully update');
         } else {
             return redirect()->route('profile_')->with('failed', 'profile was successfully update');
@@ -215,6 +250,6 @@ class UserController extends Controller
     public function list_users()
     {
         $users = User::get();
-        return response()->json(['data' => $users,'message' => 'ok','status' => 200]);
+        return response()->json(['data' => $users, 'message' => 'ok', 'status' => 200]);
     }
 }

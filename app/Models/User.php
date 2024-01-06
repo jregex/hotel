@@ -20,6 +20,14 @@ class User extends Authenticatable
      */
     protected $guarded = ['id'];
 
+    public function setJabatanAttribute($value)
+    {
+        $this->attributes['jabatan'] = ucfirst($value);
+    }
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = ucfirst($value);
+    }
     public function role()
     {
         return $this->belongsTo(Role::class);
